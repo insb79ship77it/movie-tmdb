@@ -5,313 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>영화 정보 모아보기 | TMDB Movie Hub</title>
   
-  <!-- Pretendard 폰트 불러오기 -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
   <style>
-    /* Global Reset & Base Style */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    }
-    body {
-      background-color: #ffffff; /* 순백색 배경 */
-      color: #111827;
-      line-height: 1.5;
-      padding-bottom: 60px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Header & Navigation */
-    header {
-      border-bottom: 1px solid #f3f4f6;
-      padding: 20px 0;
-      position: sticky;
-      top: 0;
-      background-color: #ffffff;
-      z-index: 100;
-    }
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #111827;
-      text-decoration: none;
-    }
-    .search-box {
-      display: flex;
-      gap: 8px;
-      flex: 1;
-      max-width: 400px;
-    }
-    .search-input {
-      width: 100%;
-      padding: 10px 16px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .search-input:focus {
-      border-color: #2563eb;
-    }
-    .search-btn {
-      padding: 10px 20px;
-      background-color: #111827;
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    /* Category Nav */
-    .nav-tabs {
-      display: flex;
-      gap: 12px;
-      margin: 24px 0 32px 0;
-    }
-    .tab-btn {
-      padding: 8px 18px;
-      border-radius: 20px;
-      border: 1px solid #e5e7eb;
-      background-color: #ffffff;
-      color: #4b5563;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tab-btn.active {
-      background-color: #111827;
-      color: #ffffff;
-      border-color: #111827;
-    }
-
-    /* Movie Grid Layout */
-    .movie-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    /* Movie Card Style */
-    .movie-card {
-      background-color: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .movie-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.06);
-    }
-    .poster-wrapper {
-      width: 100%;
-      height: 340px;
-      border-radius: 8px;
-      overflow: hidden;
-      background-color: #f3f4f6;
-      margin-bottom: 16px;
-    }
-    .poster-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Card Content (Exact 3 Lines Spec) */
-    .card-content {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex: 1;
-    }
-
-    /* 1줄: 이름 */
-    .movie-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #111827;
-      line-height: 1.3;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* 2줄: 설명 */
-    .movie-overview {
-      font-size: 0.88rem;
-      color: #4b5563;
-      line-height: 1.4;
-      height: 2.8em; /* 정확히 2줄 높이 고정 */
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    /* 3줄: 평점, 장르, (감독) / 오른쪽: 상세 정보 */
-    .card-bottom-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: auto;
-      padding-top: 12px;
-      border-top: 1px solid #f3f4f6;
-      font-size: 0.85rem;
-    }
-    .left-meta {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #6b7280;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .rating {
-      color: #111827;
-      font-weight: 700;
-    }
-    .star {
-      color: #f59e0b;
-    }
-    .more-btn {
-      color: #2563eb;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      white-space: nowrap;
-      border: none;
-      background: none;
-      padding: 0;
-    }
-    .more-btn:hover {
-      text-decoration: underline;
-    }
-
-    /* Banner Ad Area (CPA / Webhard) */
-    .ad-banner-box {
-      margin: 40px 0;
-      padding: 20px;
-      background-color: #f9fafb;
-      border: 1px dashed #d1d5db;
-      border-radius: 12px;
-      text-align: center;
-    }
-    .ad-banner-box a {
-      color: #2563eb;
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 1.05rem;
-    }
-    .ad-banner-box p {
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-top: 4px;
-    }
-
-    /* Modal Popup */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-    .modal-overlay.active {
-      display: flex;
-    }
-    .modal-content {
-      background-color: #ffffff;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 28px;
-      position: relative;
-    }
-    .close-modal {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      font-size: 1.5rem;
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: #6b7280;
-    }
-    .modal-hero {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .modal-poster {
-      width: 140px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    .modal-info-text h3 {
-      font-size: 1.4rem;
-      margin-bottom: 8px;
-    }
-    .modal-ad-btn {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      margin-top: 20px;
-      background-color: #059669;
-      color: #ffffff;
-      text-align: center;
-      font-weight: 700;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
-    /* Footer & TMDB Attribution */
-    footer {
-      margin-top: 60px;
-      padding-top: 30px;
-      border-top: 1px solid #f3f4f6;
-      text-align: center;
-      color: #9ca3af;
-      font-size: 0.85rem;
-    }
-    .tmdb-attribution {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .tmdb-logo {
-      height: 12px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Pretendard Variable", Pretendard, sans-serif; }
+    body { background-color: #ffffff; color: #111827; line-height: 1.5; padding-bottom: 60px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    header { border-bottom: 1px solid #f3f4f6; padding: 20px 0; position: sticky; top: 0; background-color: #ffffff; z-index: 100; }
+    .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .logo { font-size: 1.5rem; font-weight: 800; color: #111827; text-decoration: none; }
+    .search-box { display: flex; gap: 8px; flex: 1; max-width: 400px; }
+    .search-input { width: 100%; padding: 10px 16px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.95rem; outline: none; }
+    .search-btn { padding: 10px 20px; background-color: #111827; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .nav-tabs { display: flex; gap: 12px; margin: 24px 0 32px 0; }
+    .tab-btn { padding: 8px 18px; border-radius: 20px; border: 1px solid #e5e7eb; background-color: #ffffff; color: #4b5563; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+    .tab-btn.active { background-color: #111827; color: #ffffff; border-color: #111827; }
+    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .error-box { grid-column: 1 / -1; padding: 30px; background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; text-align: center; }
+    footer { margin-top: 60px; padding-top: 30px; border-top: 1px solid #f3f4f6; text-align: center; color: #9ca3af; font-size: 0.85rem; }
+    .tmdb-attribution { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
+    .tmdb-logo { height: 12px; }
   </style>
 </head>
 <body>
@@ -327,45 +40,15 @@
   </header>
 
   <main class="container">
-    <!-- Category Navigation -->
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab(this, 'popular')">인기 영화</button>
       <button class="tab-btn" onclick="switchTab(this, 'now_playing')">현재 상영작</button>
       <button class="tab-btn" onclick="switchTab(this, 'top_rated')">최고 평점</button>
     </div>
 
-    <!-- Movie List Grid -->
-    <div class="movie-grid" id="movieGrid">
-      <!-- JavaScript로 영화 카드가 여기에 동적 생성됩니다 -->
-    </div>
-
-    <!-- Webhard CPA Ad Banner Area -->
-    <div class="ad-banner-box">
-      <a href="https://example.com" target="_blank" rel="nofollow">[제휴] 고화질 영화·드라마 다시보기 무료 10,000p 쿠폰 받기 ➔</a>
-      <p>제휴 웹하드 공식 신규가입 혜택 이벤트 (합법 부가통신사업자)</p>
-    </div>
+    <div class="movie-grid" id="movieGrid"></div>
   </main>
 
-  <!-- Detail Modal Popup -->
-  <div class="modal-overlay" id="movieModal">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeModal()">&times;</button>
-      <div class="modal-hero">
-        <img id="modalPoster" class="modal-poster" src="" alt="포스터">
-        <div class="modal-info-text">
-          <h3 id="modalTitle">영화 제목</h3>
-          <p id="modalMeta" style="font-size: 0.9rem; color: #6b7280; margin-bottom: 12px;"></p>
-          <p id="modalOverview" style="font-size: 0.95rem; color: #374151; line-height: 1.6;"></p>
-        </div>
-      </div>
-      <!-- Modal Internal Webhard CPA Link -->
-      <a href="https://example.com" target="_blank" rel="nofollow" class="modal-ad-btn">
-        🎬 이 영화 제휴 웹하드에서 바로보기 (무료 포인트 지급)
-      </a>
-    </div>
-  </div>
-
-  <!-- Footer with Required TMDB Attribution -->
   <footer>
     <div class="container">
       <p>&copy; 2026 MOVIE HUB. All rights reserved.</p>
@@ -377,142 +60,50 @@
   </footer>
 
   <script>
-    // TMDB API 설정 (본인의 API Key로 변경하실 수 있습니다)
-    const TMDB_API_KEY = '8267254fc2c012376e2c66d7fea58385'; // 기본 데모용 키
+    const TMDB_API_KEY = '8267254fc2c012376e2c66d7fea58385'; 
     const BASE_URL = 'https://api.themoviedb.org/3';
-    const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-    // 장르 ID 매핑 테이블
-    const GENRE_MAP = {
-      28: "액션", 12: "모험", 16: "애니메이션", 35: "코미디", 80: "범죄",
-      99: "다큐멘터리", 18: "드라마", 10751: "가족", 14: "판타지", 36: "역사",
-      27: "공포", 10402: "음악", 9648: "미스터리", 10749: "로맨스", 878: "SF",
-      10770: "TV 영화", 53: "스릴러", 10752: "전쟁", 37: "서부"
-    };
-
-    let currentMoviesData = [];
-
-    // 페이지 로드 시 인기 영화 불러오기
     document.addEventListener('DOMContentLoaded', () => {
       loadMovies('popular');
     });
 
-    // TMDB 영화 데이터 가져오기 함수
     async function loadMovies(type) {
       const grid = document.getElementById('movieGrid');
-      grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color:#6b7280;">영화를 불러오는 중입니다...</p>';
+      grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color:#6b7280;">데이터를 가져오는 중...</p>';
       
       try {
-        const response = await fetch(`${BASE_URL}/movie/${type}?api_key=${TMDB_API_KEY}&language=ko-KR&page=1`);
+        const url = `${BASE_URL}/movie/${type}?api_key=${TMDB_API_KEY}&language=ko-KR&page=1`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error(`서버 응답 오류 (상태 코드: ${response.status})`);
+        }
+
         const data = await response.json();
-        currentMoviesData = data.results;
-        renderMovies(currentMoviesData);
+        
+        if (!data.results || data.results.length === 0) {
+          grid.innerHTML = '<div class="error-box">가져온 영화 데이터가 없습니다.</div>';
+          return;
+        }
+
+        // 정상 출력 테스트용
+        grid.innerHTML = `<div style="grid-column:1/-1; padding:20px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; color:#166534;">성공적으로 데이터를 불러왔습니다! 영화 개수: ${data.results.length}개</div>`;
+
       } catch (error) {
-        console.error('API Fetch Error:', error);
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color:#ef4444;">영화 데이터를 불러오지 못했습니다.</p>';
-      }
-    }
-
-    // 영화 검색 함수
-    async function searchMovie() {
-      const query = document.getElementById('searchInput').value.trim();
-      if (!query) return;
-
-      const grid = document.getElementById('movieGrid');
-      grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color:#6b7280;">검색 중입니다...</p>';
-
-      try {
-        const response = await fetch(`${BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=ko-KR&query=${encodeURIComponent(query)}&page=1`);
-        const data = await response.json();
-        currentMoviesData = data.results;
-        renderMovies(currentMoviesData);
-      } catch (error) {
-        console.error('Search Error:', error);
-      }
-    }
-
-    // 영화 카드를 화면에 렌더링하는 함수 (3줄 규칙 적용)
-    function renderMovies(movies) {
-      const grid = document.getElementById('movieGrid');
-      grid.innerHTML = '';
-
-      if (!movies || movies.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color:#6b7280;">검색 결과가 없습니다.</p>';
-        return;
-      }
-
-      movies.forEach(movie => {
-        const posterUrl = movie.poster_path 
-          ? `${IMAGE_BASE_URL}${movie.poster_path}` 
-          : 'https://via.placeholder.com/500x750?text=No+Image';
-
-        const genreName = movie.genre_ids && movie.genre_ids.length > 0 
-          ? GENRE_MAP[movie.genre_ids[0]] || '기타' 
-          : '영화';
-
-        const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
-        const overviewText = movie.overview ? movie.overview : '줄거리 정보가 제공되지 않습니다.';
-
-        const card = document.createElement('div');
-        card.className = 'movie-card';
-        card.innerHTML = `
-          <div class="poster-wrapper">
-            <img class="poster-img" src="${posterUrl}" alt="${movie.title}" loading="lazy">
-          </div>
-          <div class="card-content">
-            <!-- 1줄: 이름 -->
-            <h3 class="movie-title">${movie.title}</h3>
-            
-            <!-- 2줄: 설명 -->
-            <p class="movie-overview">${overviewText}</p>
-            
-            <!-- 3줄: (좌) 평점 • 장르 / (우) 상세 정보 -->
-            <div class="card-bottom-line">
-              <div class="left-meta">
-                <span class="star">★</span>
-                <span class="rating">${rating}</span>
-                <span>•</span>
-                <span>${genreName}</span>
-              </div>
-              <button class="more-btn" onclick="openModal(${movie.id})">상세 정보 ➔</button>
-            </div>
+        console.error(error);
+        grid.innerHTML = `
+          <div class="error-box">
+            <strong>데이터를 불러오지 못했습니다. (오류 발생)</strong><br>
+            <p style="margin-top: 8px; font-family: monospace;">${error.message}</p>
           </div>
         `;
-        grid.appendChild(card);
-      });
+      }
     }
 
-    // 카테고리 탭 변경
     function switchTab(btn, type) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       loadMovies(type);
-    }
-
-    // 상세 모달 열기
-    function openModal(movieId) {
-      const movie = currentMoviesData.find(m => m.id === movieId);
-      if (!movie) return;
-
-      const posterUrl = movie.poster_path 
-        ? `${IMAGE_BASE_URL}${movie.poster_path}` 
-        : 'https://via.placeholder.com/500x750?text=No+Image';
-
-      const genreName = movie.genre_ids && movie.genre_ids.length > 0 
-        ? GENRE_MAP[movie.genre_ids[0]] || '기타' 
-        : '영화';
-
-      document.getElementById('modalPoster').src = posterUrl;
-      document.getElementById('modalTitle').innerText = movie.title;
-      document.getElementById('modalMeta').innerText = `★ ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'} | ${genreName} | 개봉: ${movie.release_date || '미정'}`;
-      document.getElementById('modalOverview').innerText = movie.overview || '상세 줄거리 정보가 없습니다.';
-
-      document.getElementById('movieModal').classList.add('active');
-    }
-
-    // 모달 닫기
-    function closeModal() {
-      document.getElementById('movieModal').classList.remove('active');
     }
   </script>
 </body>
